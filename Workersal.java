@@ -53,7 +53,7 @@ class PayRoll {
     }
 }
 
-public class Worker {
+public class Workersal {
     public static void main(String[] args) {
         PayRoll payRoll = new PayRoll();
 

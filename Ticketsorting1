@@ -1,5 +1,3 @@
-package king;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,13 +42,13 @@ public class Ticketsorting1 {
 		System.out.println("\nSorted by Passenger Count");
 		Collections.sort(tickets, new Comparator<Ticket>() {
 			public int compare(Ticket t1, Ticket t2) {
-				return t1.getPassengerCount() - t2.getPassengerCount();
+				return -t1.getPassengerCount() + t2.getPassengerCount();
 			}
 		});
 		System.out.println(tickets);
 
 		System.out.println("\nSorted by TotalFare");
-		Collections.sort(tickets, (a, b) -> (int) (a.getTotalFare() - b.getTotalFare()));
+		Collections.sort(tickets, (a, b) -> (int) (-a.getTotalFare() + b.getTotalFare()));
 		System.out.println(tickets);
 
 		System.out.println("\nSorted by TravelDate");

@@ -48,6 +48,10 @@ public class Ticketsorting1 {
 		Collections.sort(tickets,(a, b) -> (int) (a.getTotalFare() - b.getTotalFare()));
 		System.out.println(tickets);
 
+		Collections.sort(tickets, (t1, t2) -> t1.getTraveldate().compareTo(t2.getTraveldate()));
+		System.out.println(tickets);
+
+
 		// Display sorted ticket details
 		for (Ticket ticket : tickets) {
 			ticket.displayTicketDetails();

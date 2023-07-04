@@ -1,4 +1,8 @@
-import java.util.*;
+package king;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Ticketsorting1 {
 	public static void main(String args[]) {
@@ -36,21 +40,23 @@ public class Ticketsorting1 {
 		tickets.add(tt3);
 
 		// Sort the tickets based on travel date
-		//Collections.sort(tickets, );
-                 Collections.sort(tickets,new Comparator<Ticket>(){
-			public int compare(Ticket t1,Ticket t2){
+		// Collections.sort(tickets, );
+		System.out.println("\nSorted by Passenger Count");
+		Collections.sort(tickets, new Comparator<Ticket>() {
+			public int compare(Ticket t1, Ticket t2) {
 				return t1.getPassengerCount() - t2.getPassengerCount();
 			}
 		});
 		System.out.println(tickets);
 
 		System.out.println("\nSorted by TotalFare");
-		Collections.sort(tickets,(a, b) -> (int) (a.getTotalFare() - b.getTotalFare()));
+		Collections.sort(tickets, (a, b) -> (int) (a.getTotalFare() - b.getTotalFare()));
 		System.out.println(tickets);
 
+		System.out.println("\nSorted by TravelDate");
 		Collections.sort(tickets, (t1, t2) -> t1.getTraveldate().compareTo(t2.getTraveldate()));
 		System.out.println(tickets);
-
+		System.out.println();
 
 		// Display sorted ticket details
 		for (Ticket ticket : tickets) {
@@ -114,10 +120,9 @@ public class Ticketsorting1 {
 			return totalFare;
 		}
 
-		public String toString(){
+		public String toString() {
 			return new Integer(this.TicketNo).toString();
 		}
-
 
 		public void displayTicketDetails() {
 			System.out.println("TicketNo :" + TicketNo);

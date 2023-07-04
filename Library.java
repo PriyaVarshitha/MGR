@@ -1,5 +1,3 @@
-package king;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,15 +51,16 @@ public class Library {
 			System.out.println("Category: " + category);
 			System.out.println();
 
+			System.out.println("------------------------------------------------------");
+			System.out.printf("%-12s | %-10s | %-10s | %-20s%n", "ISBN", "Title", "Author", "Publisher");
+			System.out.println("------------------------------------------------------");
+
 			HashMap<String, Book> booksInCategory = Lib.get(category);
 			for (String isbn : booksInCategory.keySet()) {
 				Book book = booksInCategory.get(isbn);
-				System.out.println("ISBN: " + isbn);
-				System.out.println("Title: " + book.Title);
-				System.out.println("Author: " + book.Author);
-				System.out.println("Publisher: " + book.Publisher);
-				System.out.println();
+				System.out.printf("%-12s | %-10s | %-10s | %-20s%n", isbn, book.Title, book.Author, book.Publisher);
 			}
+			System.out.println();
 		}
 
 	}

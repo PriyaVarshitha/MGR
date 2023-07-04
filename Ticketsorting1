@@ -8,7 +8,7 @@ public class Ticketsorting1 {
 	public static void main(String args[]) {
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		// Ticket 1
-		Ticket tt1 = new Ticket(1234, 3712, "27-06-2023", "vsp", "ppm");
+		Ticket tt1 = new Ticket(1234, 3712, "2023-06-27", "vsp", "ppm");
 		ArrayList<Passenger> passengers1 = new ArrayList<>();
 		passengers1.add(new Passenger("ramu", 2, "m"));
 		passengers1.add(new Passenger("sai", 8, "f"));
@@ -17,7 +17,7 @@ public class Ticketsorting1 {
 		tt1.setPassengers(passengers1);
 
 		// Ticket 2
-		Ticket tt2 = new Ticket(5678, 7812, "22-06-2023", "abc", "xyz");
+		Ticket tt2 = new Ticket(5678, 7812, "2023-06-22", "abc", "xyz");
 		ArrayList<Passenger> passengers2 = new ArrayList<>();
 		passengers2.add(new Passenger("john", 30, "m"));
 		passengers2.add(new Passenger("jane", 25, "f"));
@@ -26,7 +26,7 @@ public class Ticketsorting1 {
 		tt2.setPassengers(passengers2);
 
 		// Ticket 3
-		Ticket tt3 = new Ticket(9876, 9123, "19-06-2023", "mnp", "qrs");
+		Ticket tt3 = new Ticket(9876, 9123, "2023-06-19", "mnp", "qrs");
 		ArrayList<Passenger> passengers3 = new ArrayList<>();
 		passengers3.add(new Passenger("bob", 45, "m"));
 		passengers3.add(new Passenger("mary", 50, "f"));

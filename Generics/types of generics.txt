@@ -36,19 +36,6 @@ In this case, the type parameter T must be a subclass of Number or
 Number itself. This allows the usage of methods and properties specific 
 to the Number class within the generic class.
 
-Lower Bounded Generics:
-Lower bounded generics restrict the type parameter to be a specific type or 
-any of its supertypes. It is denoted using the super keyword. 
-For example:
-class Box<T super Integer> {
-    // ...
-}
-Here, the type parameter T must be Integer or one of its supertypes. This allows the usage of methods and 
-properties available in Integer or its superclasses.
-
-By using bounded generics, you can enforce specific type relationships or access 
-type-specific functionality within the generic code. It provides compile-time type 
-safety and allows for more precise control over the types used in generic declarations.
 
 
 Wildcard generics:

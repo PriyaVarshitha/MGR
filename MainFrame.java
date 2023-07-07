@@ -12,16 +12,16 @@ public class MainFrame extends Frame {
     private TextField jobTextField;
     private TextField salaryTextField;
     private Choice departmentChoice;
-    private Button addButton;
-    private Button saveButton;
-    private Button delButton;
-    private Button searchButton;
     private int currentIndex = 0;
     private int totalRecords = 0;
     private List<String[]> records = new ArrayList<>();
     private boolean isEditMode = false;
     private static final String DATA_FILE_PATH = "D:\\Eclipse_workplace\\JavaTraining\\src\\Training\\Emp.txt";
     private static final Font BOLD_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 12);
+    private Button addButton;
+    private Button saveButton;
+    private Button delButton;
+    private Button searchButton;
 
     public MainFrame() {
         setTitle("Employee Master Entry");
@@ -70,87 +70,55 @@ public class MainFrame extends Frame {
 
         for (String buttonName : buttonNames) {
             Button button = new Button(buttonName);
-            if (buttonName.equals("Exit")) {
-                button.addActionListener(e -> dispose());
-            } else if (buttonName.equals("Clear")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        clearFields();
-                    }
-                });
-            }  else if (buttonName.equals("Add")) {
-				addButton = button; // Store the "Add" button reference
-				// Disable the "Add" button by default
-				addButton.setEnabled(false);
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						addDataToFile();
-					}
-				});
-			} 
-            else if (buttonName.equals("First")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        showFirstRecord();
-                    }
-                });
-            } else if (buttonName.equals("Last")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        showLastRecord();
-                    }
-                });
-            } else if (buttonName.equals("Next")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        showNextRecord();
-                    }
-                });
-            } else if (buttonName.equals("Prev")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        showPreviousRecord();
-                    }
-                });
-            } else if (buttonName.equals("Edit")) {
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        toggleEditMode();
-                    }
-                });
-            } else if (buttonName.equals("Save")) {
-				saveButton = button; // Store the "Save" button reference
-				// Disable the "Save" button by default
-				saveButton.setEnabled(false);
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						saveDataToFile();
-					}
-				});
-			}
-            else if (buttonName.equals("Del")) {
-				delButton = button; // Store the "Save" button reference
-				// Disable the "Save" button by default
-				delButton.setEnabled(false);
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						saveDataToFile();
-					}
-				});
-			}else if (buttonName.equals("Search")) {
-				searchButton=button;
-				searchButton.setEnabled(false);
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        searchRecord();
-                    }
-                });
-            }
             button.setFont(buttonFont);
-            
-            // Set colors for buttons
             button.setBackground(Color.YELLOW);
             button.setForeground(Color.BLACK);
+
+            switch (buttonName) {
+                case "Exit":
+                    button.addActionListener(e -> dispose());
+                    break;
+                case "Clear":
+                    button.addActionListener(e -> clearFields());
+                    break;
+                case "Add":
+                	 addButton = button;
+                     addButton.setEnabled(false);
+                     addButton.addActionListener(e -> addDataToFile());
+                     break;
+                case "First":
+                    button.addActionListener(e -> showFirstRecord());
+                    break;
+                case "Last":
+                    button.addActionListener(e -> showLastRecord());
+                    break;
+                case "Next":
+                    button.addActionListener(e -> showNextRecord());
+                    break;
+                case "Prev":
+                    button.addActionListener(e -> showPreviousRecord());
+                    break;
+                case "Edit":
+                    button.addActionListener(e -> toggleEditMode());
+                    break;
+                case "Save":
+                	 saveButton = button;
+                     saveButton.setEnabled(false);
+                     saveButton.addActionListener(e -> saveDataToFile());
+                     break;
+                case "Del":
+                	delButton = button;
+                    delButton.setEnabled(false);
+                    delButton.addActionListener(e -> deleteCurrentRecord());
+                    break;
+                case "Search":
+                	searchButton = button;
+                    searchButton.setEnabled(false);
+                    searchButton.addActionListener(e -> searchRecord());
+                    break;
+            }
+           
+
             buttonPanel.add(button);
         }
 
@@ -163,6 +131,7 @@ public class MainFrame extends Frame {
         label.setForeground(Color.BLUE);
         return label;
     }
+
     private void readDataFromFile(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
             records.clear();
@@ -206,6 +175,7 @@ public class MainFrame extends Frame {
             System.out.println("Failed to update data file: " + e.getMessage());
         }
     }
+
     private void clearFields() {
         empNoTextField.setText("");
         nameTextField.setText("");
@@ -213,6 +183,7 @@ public class MainFrame extends Frame {
         salaryTextField.setText("");
         departmentChoice.select(0);
     }
+
     private void addDataToFile() {
         String empNo = empNoTextField.getText().trim();
         String name = nameTextField.getText().trim();
@@ -245,19 +216,11 @@ public class MainFrame extends Frame {
     }
 
     private void setModeUI() {
-        if (isEditMode) {
-            empNoTextField.setEditable(true);
-            nameTextField.setEditable(true);
-            jobTextField.setEditable(true);
-            salaryTextField.setEditable(true);
-            departmentChoice.setEnabled(true);
-        } else {
-            empNoTextField.setEditable(false);
-            nameTextField.setEditable(false);
-            jobTextField.setEditable(false);
-            salaryTextField.setEditable(false);
-            departmentChoice.setEnabled(false);
-        }
+        empNoTextField.setEditable(isEditMode);
+        nameTextField.setEditable(isEditMode);
+        jobTextField.setEditable(isEditMode);
+        salaryTextField.setEditable(isEditMode);
+        departmentChoice.setEnabled(isEditMode);
     }
 
     private void deleteCurrentRecord() {
@@ -278,6 +241,7 @@ public class MainFrame extends Frame {
             }
         }
     }
+
     private void saveDataToFile() {
         String empNo = empNoTextField.getText().trim();
         String name = nameTextField.getText().trim();
@@ -329,6 +293,7 @@ public class MainFrame extends Frame {
             }
         }
     }
+
     private void showPreviousRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
@@ -339,14 +304,13 @@ public class MainFrame extends Frame {
             }
         }
     }
+
     private void toggleEditMode() {
         isEditMode = !isEditMode;
         setModeUI();
-        addButton.setEnabled(isEditMode);
-        saveButton.setEnabled(isEditMode);
-        delButton.setEnabled(isEditMode);
-        searchButton.setEnabled(isEditMode);
+        updateButtonEnabledStates();
     }
+
     private void searchRecord() {
         String searchTerm = empNoTextField.getText().trim();
         if (!searchTerm.isEmpty()) {
@@ -371,7 +335,17 @@ public class MainFrame extends Frame {
             System.out.println("Please enter a search term.");
         }
     }
+
+    private void updateButtonEnabledStates() {
+        addButton.setEnabled(isEditMode);
+        saveButton.setEnabled(isEditMode);
+        delButton.setEnabled(isEditMode);
+        searchButton.setEnabled(isEditMode);
+    }
+
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
+        
+
     }
 }

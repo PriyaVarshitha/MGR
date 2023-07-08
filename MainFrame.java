@@ -3,6 +3,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.JOptionPane;
 public class MainFrame extends Frame {
     private TextField empNoTextField;
     private TextField nameTextField;
@@ -173,10 +174,10 @@ public class MainFrame extends Frame {
             records.add(data);
             totalRecords++;
             writeDataToFile(DATA_FILE_PATH);
-            System.out.println("Data added to file successfully!");
+            JOptionPane.showMessageDialog(this, "Data added to file successfully!");
             clearFields();
         } else {
-            System.out.println("Please fill in all fields!");
+            JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
     private void displayRecord(int index) {
@@ -208,7 +209,7 @@ public class MainFrame extends Frame {
                 displayRecord(currentIndex);
             } else {
                 clearFields();
-                System.out.println("All records deleted.");
+                JOptionPane.showMessageDialog(this, "All records deleted.");
             }
         }
     }
@@ -222,15 +223,15 @@ public class MainFrame extends Frame {
             String[] data = { empNo, name, job, salary, department };
             records.set(currentIndex, data);
             writeDataToFile(DATA_FILE_PATH);
-            System.out.println("Data saved to file successfully!");
+            JOptionPane.showMessageDialog(this, "Data added to file successfully!");
         } else {
-            System.out.println("Please fill in all fields!");
+            JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
     private void showFirstRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
-                System.out.println("Already at the first record.");
+                JOptionPane.showMessageDialog(this, "Already at the first record.");
             } else {
                 currentIndex = 0;
                 displayRecord(currentIndex);
@@ -240,7 +241,7 @@ public class MainFrame extends Frame {
     private void showLastRecord() {
         if (totalRecords > 0) {
             if (currentIndex == totalRecords - 1) {
-                System.out.println("Already at the last record.");
+                JOptionPane.showMessageDialog(this, "Already at the last record.");
             } else {
                 currentIndex = totalRecords - 1;
                 displayRecord(currentIndex);
@@ -250,7 +251,7 @@ public class MainFrame extends Frame {
     private void showNextRecord() {
         if (totalRecords > 0) {
             if (currentIndex == totalRecords - 1) {
-                System.out.println("Already at the last record.");
+            	JOptionPane.showMessageDialog(this, "Already at the last record.");
             } else {
                 currentIndex++;
                 displayRecord(currentIndex);
@@ -260,7 +261,8 @@ public class MainFrame extends Frame {
     private void showPreviousRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
-                System.out.println("Already at the first record.");
+                JOptionPane.showMessageDialog(this, "Already at the first record.");
+
             } else {
                 currentIndex--;
                 displayRecord(currentIndex);
@@ -286,14 +288,15 @@ public class MainFrame extends Frame {
             if (foundIndex != -1) {
                 currentIndex = foundIndex;
                 displayRecord(currentIndex);
-                System.out.println("Record found.");
+                JOptionPane.showMessageDialog(this, "Record found.");
             } else {
                 clearFields();
-                System.out.println("Record not found.");
+                JOptionPane.showMessageDialog(this, "Record not found.");
             }
         } else {
             clearFields();
-            System.out.println("Please enter a search term.");
+            JOptionPane.showMessageDialog(this, "Please enter a search term.");
+
         }
     }
     private void updateButtonEnabledStates() {

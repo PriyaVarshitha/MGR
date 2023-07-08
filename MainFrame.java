@@ -1,11 +1,8 @@
 package Training;
-
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
-
 public class MainFrame extends Frame {
     private TextField empNoTextField;
     private TextField nameTextField;
@@ -22,10 +19,9 @@ public class MainFrame extends Frame {
     private Button saveButton;
     private Button delButton;
     private Button searchButton;
-
     public MainFrame() {
         setTitle("Employee Master Entry");
-        setSize(400, 400);
+        setSize(300, 300);
         setLayout(new BorderLayout());
         initializeGUI();
         readDataFromFile(DATA_FILE_PATH);
@@ -33,7 +29,6 @@ public class MainFrame extends Frame {
         this.setBackground(Color.WHITE);
         setVisible(true);
     }
-
     private void initializeGUI() {
         Panel panel = new Panel(new GridLayout(6, 2));
         Label empNoLabel = createBoldLabel("Emp No:");
@@ -60,20 +55,16 @@ public class MainFrame extends Frame {
         panel.add(departmentLabel);
         panel.add(departmentChoice);
         add(panel, BorderLayout.CENTER);
-
         Panel buttonPanel = new Panel(new GridLayout(5, 2));
-
         // Add other buttons here...
         String[] buttonNames = { "First", "Next", "Prev", "Last", "Add", "Edit", "Del", "Save", "Search", "Clear",
                 "Exit" };
         Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
-
         for (String buttonName : buttonNames) {
             Button button = new Button(buttonName);
             button.setFont(buttonFont);
             button.setBackground(Color.YELLOW);
             button.setForeground(Color.BLACK);
-
             switch (buttonName) {
                 case "Exit":
                     button.addActionListener(e -> dispose());
@@ -117,28 +108,22 @@ public class MainFrame extends Frame {
                     searchButton.addActionListener(e -> searchRecord());
                     break;
             }
-           
-
             buttonPanel.add(button);
         }
-
-        add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH); 
     }
-
     private Label createBoldLabel(String text) {
         Label label = new Label(text);
         label.setFont(BOLD_FONT);
         label.setForeground(Color.BLUE);
         return label;
     }
-
     private void readDataFromFile(String filePath) {
-        try (Scanner scanner = new Scanner(new File(filePath))) {
+        try (Scanner sc = new Scanner(new File(filePath))) {
             records.clear();
             totalRecords = 0;
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
                 StringTokenizer tokenizer = new StringTokenizer(line, ",");
                 String[] data = new String[tokenizer.countTokens()];
 
@@ -147,13 +132,9 @@ public class MainFrame extends Frame {
                     data[index] = tokenizer.nextToken();
                     index++;
                 }
-
-                if (data.length == 5) {
                     records.add(data);
-                    totalRecords++;
-                }
+                    totalRecords++;  
             }
-
             if (totalRecords > 0) {
                 currentIndex = 0;
                 displayRecord(currentIndex);
@@ -164,7 +145,6 @@ public class MainFrame extends Frame {
             System.out.println("File not found: " + filePath);
         }
     }
-
     private void writeDataToFile(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (String[] record : records) {
@@ -175,7 +155,6 @@ public class MainFrame extends Frame {
             System.out.println("Failed to update data file: " + e.getMessage());
         }
     }
-
     private void clearFields() {
         empNoTextField.setText("");
         nameTextField.setText("");
@@ -183,7 +162,6 @@ public class MainFrame extends Frame {
         salaryTextField.setText("");
         departmentChoice.select(0);
     }
-
     private void addDataToFile() {
         String empNo = empNoTextField.getText().trim();
         String name = nameTextField.getText().trim();
@@ -194,16 +172,13 @@ public class MainFrame extends Frame {
             String[] data = { empNo, name, job, salary, department };
             records.add(data);
             totalRecords++;
-
             writeDataToFile(DATA_FILE_PATH);
-
             System.out.println("Data added to file successfully!");
             clearFields();
         } else {
             System.out.println("Please fill in all fields!");
         }
     }
-
     private void displayRecord(int index) {
         if (index >= 0 && index < totalRecords) {
             String[] data = records.get(index);
@@ -214,7 +189,6 @@ public class MainFrame extends Frame {
             departmentChoice.select(data[4].trim());
         }
     }
-
     private void setModeUI() {
         empNoTextField.setEditable(isEditMode);
         nameTextField.setEditable(isEditMode);
@@ -222,14 +196,11 @@ public class MainFrame extends Frame {
         salaryTextField.setEditable(isEditMode);
         departmentChoice.setEnabled(isEditMode);
     }
-
     private void deleteCurrentRecord() {
         if (totalRecords > 0) {
             records.remove(currentIndex);
             totalRecords--;
-
             writeDataToFile(DATA_FILE_PATH);
-
             if (totalRecords > 0) {
                 if (currentIndex >= totalRecords) {
                     currentIndex = totalRecords - 1;
@@ -241,26 +212,21 @@ public class MainFrame extends Frame {
             }
         }
     }
-
     private void saveDataToFile() {
         String empNo = empNoTextField.getText().trim();
         String name = nameTextField.getText().trim();
         String job = jobTextField.getText().trim();
         String salary = salaryTextField.getText().trim();
         String department = departmentChoice.getSelectedItem();
-
         if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
             String[] data = { empNo, name, job, salary, department };
             records.set(currentIndex, data);
-
             writeDataToFile(DATA_FILE_PATH);
-
             System.out.println("Data saved to file successfully!");
         } else {
             System.out.println("Please fill in all fields!");
         }
     }
-
     private void showFirstRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
@@ -271,7 +237,6 @@ public class MainFrame extends Frame {
             }
         }
     }
-
     private void showLastRecord() {
         if (totalRecords > 0) {
             if (currentIndex == totalRecords - 1) {
@@ -282,7 +247,6 @@ public class MainFrame extends Frame {
             }
         }
     }
-
     private void showNextRecord() {
         if (totalRecords > 0) {
             if (currentIndex == totalRecords - 1) {
@@ -293,7 +257,6 @@ public class MainFrame extends Frame {
             }
         }
     }
-
     private void showPreviousRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
@@ -304,13 +267,11 @@ public class MainFrame extends Frame {
             }
         }
     }
-
     private void toggleEditMode() {
         isEditMode = !isEditMode;
         setModeUI();
         updateButtonEnabledStates();
     }
-
     private void searchRecord() {
         String searchTerm = empNoTextField.getText().trim();
         if (!searchTerm.isEmpty()) {
@@ -335,17 +296,13 @@ public class MainFrame extends Frame {
             System.out.println("Please enter a search term.");
         }
     }
-
     private void updateButtonEnabledStates() {
         addButton.setEnabled(isEditMode);
         saveButton.setEnabled(isEditMode);
         delButton.setEnabled(isEditMode);
         searchButton.setEnabled(isEditMode);
     }
-
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
-        
-
     }
 }

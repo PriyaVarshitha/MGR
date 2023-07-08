@@ -57,7 +57,6 @@ public class MainFrame extends Frame {
         panel.add(departmentChoice);
         add(panel, BorderLayout.CENTER);
         Panel buttonPanel = new Panel(new GridLayout(5, 2));
-        // Add other buttons here...
         String[] buttonNames = { "First", "Next", "Prev", "Last", "Add", "Edit", "Del", "Save", "Search", "Clear",
                 "Exit" };
         Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
@@ -96,7 +95,7 @@ public class MainFrame extends Frame {
                 case "Save":
                 	 saveButton = button;
                      saveButton.setEnabled(false);
-                     saveButton.addActionListener(e -> saveDataToFile());
+                     saveButton.addActionListener(e -> addDataToFile());
                      break;
                 case "Del":
                 	delButton = button;
@@ -171,15 +170,21 @@ public class MainFrame extends Frame {
         String department = departmentChoice.getSelectedItem();
         if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
             String[] data = { empNo, name, job, salary, department };
-            records.add(data);
-            totalRecords++;
-            writeDataToFile(DATA_FILE_PATH);
-            JOptionPane.showMessageDialog(this, "Data added to file successfully!");
-            clearFields();
+            if (recordExists(data)) {
+                JOptionPane.showMessageDialog(this, "Data already exists. Please add new data.");
+                clearFields(); 
+            } else {
+                records.add(data);
+                totalRecords++;
+                writeDataToFile(DATA_FILE_PATH);
+                JOptionPane.showMessageDialog(this, "Data added to file successfully!");
+                clearFields();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
+
     private void displayRecord(int index) {
         if (index >= 0 && index < totalRecords) {
             String[] data = records.get(index);
@@ -211,6 +216,8 @@ public class MainFrame extends Frame {
                 clearFields();
                 JOptionPane.showMessageDialog(this, "All records deleted.");
             }
+            JOptionPane.showMessageDialog(this, "Record deleted successfully.");
+            clearFields();
         }
     }
     private void saveDataToFile() {
@@ -221,13 +228,27 @@ public class MainFrame extends Frame {
         String department = departmentChoice.getSelectedItem();
         if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
             String[] data = { empNo, name, job, salary, department };
-            records.set(currentIndex, data);
-            writeDataToFile(DATA_FILE_PATH);
-            JOptionPane.showMessageDialog(this, "Data added to file successfully!");
+            if (recordExists(data)) {
+                JOptionPane.showMessageDialog(this, "Data already exists. Please add new data.");
+            } else {
+                records.set(currentIndex, data);
+                writeDataToFile(DATA_FILE_PATH);
+                JOptionPane.showMessageDialog(this, "Data saved to file successfully!");
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
+
+    private boolean recordExists(String[] data) {
+        for (String[] record : records) {
+            if (Arrays.equals(record, data)) {
+                return true;
+            }
+        }
+        return false;
+    }
+ 
     private void showFirstRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {

@@ -1,9 +1,10 @@
-package Training;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 public class MainFrame extends Frame {
     private TextField empNoTextField;
     private TextField nameTextField;
@@ -20,18 +21,24 @@ public class MainFrame extends Frame {
     private Button saveButton;
     private Button delButton;
     private Button searchButton;
+    private DefaultTableModel tableModel;
+    private JTable table;
     public MainFrame() {
         setTitle("Employee Master Entry");
-        setSize(300, 300);
+        setSize(300, 400);
         setLayout(new BorderLayout());
         initializeGUI();
+        tableModel = new DefaultTableModel(new String[] { "Emp No", "Name", "Job", "Salary", "Department" }, 0);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
         readDataFromFile(DATA_FILE_PATH);
         setModeUI();
         this.setBackground(Color.WHITE);
         setVisible(true);
     }
     private void initializeGUI() {
-        Panel panel = new Panel(new GridLayout(6, 2));
+        Panel inputPanel = new Panel(new GridLayout(6, 2));
         Label empNoLabel = createBoldLabel("Emp No:");
         Label nameLabel = createBoldLabel("Name:");
         Label jobLabel = createBoldLabel("Job:");
@@ -45,17 +52,17 @@ public class MainFrame extends Frame {
         departmentChoice.add("Development");
         departmentChoice.add("Sales");
         departmentChoice.add("Testing");
-        panel.add(empNoLabel);
-        panel.add(empNoTextField);
-        panel.add(nameLabel);
-        panel.add(nameTextField);
-        panel.add(jobLabel);
-        panel.add(jobTextField);
-        panel.add(salaryLabel);
-        panel.add(salaryTextField);
-        panel.add(departmentLabel);
-        panel.add(departmentChoice);
-        add(panel, BorderLayout.CENTER);
+        inputPanel.add(empNoLabel);
+        inputPanel.add(empNoTextField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameTextField);
+        inputPanel.add(jobLabel);
+        inputPanel.add(jobTextField);
+        inputPanel.add(salaryLabel);
+        inputPanel.add(salaryTextField);
+        inputPanel.add(departmentLabel);
+        inputPanel.add(departmentChoice);
+        add(inputPanel, BorderLayout.NORTH);
         Panel buttonPanel = new Panel(new GridLayout(5, 2));
         String[] buttonNames = { "First", "Next", "Prev", "Last", "Add", "Edit", "Del", "Save", "Search", "Clear",
                 "Exit" };
@@ -122,19 +129,21 @@ public class MainFrame extends Frame {
         try (Scanner sc = new Scanner(new File(filePath))) {
             records.clear();
             totalRecords = 0;
+            tableModel.setRowCount(0); 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 StringTokenizer tokenizer = new StringTokenizer(line, ",");
                 String[] data = new String[tokenizer.countTokens()];
-
                 int index = 0;
                 while (tokenizer.hasMoreTokens()) {
                     data[index] = tokenizer.nextToken();
                     index++;
                 }
-                    records.add(data);
-                    totalRecords++;  
+                records.add(data);
+                totalRecords++;
+                tableModel.addRow(data); 
             }
+
             if (totalRecords > 0) {
                 currentIndex = 0;
                 displayRecord(currentIndex);
@@ -169,22 +178,23 @@ public class MainFrame extends Frame {
         String salary = salaryTextField.getText().trim();
         String department = departmentChoice.getSelectedItem();
         if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
-            String[] data = { empNo, name, job, salary, department };
-            if (recordExists(data)) {
-                JOptionPane.showMessageDialog(this, "Data already exists. Please add new data.");
-                clearFields(); 
-            } else {
+        	if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
+                if (!isEmpNoUnique(empNo)) {
+                    JOptionPane.showMessageDialog(this, "Duplicate empNo. Please enter a unique empNo.");
+                    return;
+                }
+                String[] data = { empNo, name, job, salary, department };
                 records.add(data);
                 totalRecords++;
                 writeDataToFile(DATA_FILE_PATH);
                 JOptionPane.showMessageDialog(this, "Data added to file successfully!");
                 clearFields();
+                updateTable(); // Update the table with the latest data
+            } else {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields!");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
-
     private void displayRecord(int index) {
         if (index >= 0 && index < totalRecords) {
             String[] data = records.get(index);
@@ -193,7 +203,17 @@ public class MainFrame extends Frame {
             jobTextField.setText(data[2].trim());
             salaryTextField.setText(data[3].trim());
             departmentChoice.select(data[4].trim());
+            table.setRowSelectionInterval(index, index);
+            table.scrollRectToVisible(table.getCellRect(index, 0, true));
         }
+    }
+    private boolean isEmpNoUnique(String empNo) {
+        for (String[] record : records) {
+            if (record[0].equals(empNo)) {
+                return false; 
+            }
+        }
+        return true; 
     }
     private void setModeUI() {
         empNoTextField.setEditable(isEditMode);
@@ -202,24 +222,27 @@ public class MainFrame extends Frame {
         salaryTextField.setEditable(isEditMode);
         departmentChoice.setEnabled(isEditMode);
     }
-    private void deleteCurrentRecord() {
-        if (totalRecords > 0) {
-            records.remove(currentIndex);
-            totalRecords--;
-            writeDataToFile(DATA_FILE_PATH);
-            if (totalRecords > 0) {
-                if (currentIndex >= totalRecords) {
-                    currentIndex = totalRecords - 1;
-                }
-                displayRecord(currentIndex);
-            } else {
-                clearFields();
-                JOptionPane.showMessageDialog(this, "All records deleted.");
-            }
-            JOptionPane.showMessageDialog(this, "Record deleted successfully.");
-            clearFields();
-        }
-    }
+    	private void deleteCurrentRecord() {
+    	    if (totalRecords > 0) {
+    	        records.remove(currentIndex);
+    	        totalRecords--;
+    	        writeDataToFile(DATA_FILE_PATH);   
+    	        if (totalRecords > 0) {
+    	            if (currentIndex >= totalRecords) {
+    	                currentIndex = totalRecords - 1;
+    	            }
+    	            displayRecord(currentIndex);
+    	        } else {
+    	            clearFields();
+    	            JOptionPane.showMessageDialog(this, "All records deleted.");
+    	        }     
+    	        // Remove the corresponding row from the table model
+    	        tableModel.removeRow(currentIndex);
+
+    	        JOptionPane.showMessageDialog(this, "Record deleted successfully.");
+    	        clearFields();
+    	    }
+    	}
     private void saveDataToFile() {
         String empNo = empNoTextField.getText().trim();
         String name = nameTextField.getText().trim();
@@ -227,28 +250,25 @@ public class MainFrame extends Frame {
         String salary = salaryTextField.getText().trim();
         String department = departmentChoice.getSelectedItem();
         if (!empNo.isEmpty() && !name.isEmpty() && !job.isEmpty() && !salary.isEmpty()) {
+            if (!isEmpNoUnique(empNo)) {
+                JOptionPane.showMessageDialog(this, "Duplicate empNo. Please enter a unique empNo.");
+                return;
+            } 
             String[] data = { empNo, name, job, salary, department };
-            if (recordExists(data)) {
-                JOptionPane.showMessageDialog(this, "Data already exists. Please add new data.");
-            } else {
-                records.set(currentIndex, data);
-                writeDataToFile(DATA_FILE_PATH);
-                JOptionPane.showMessageDialog(this, "Data saved to file successfully!");
-            }
+            records.set(currentIndex, data);
+            writeDataToFile(DATA_FILE_PATH);
+            JOptionPane.showMessageDialog(this, "Data saved to file successfully!");
+            updateTable(); 
         } else {
             JOptionPane.showMessageDialog(this, "Please fill in all fields!");
         }
     }
-
-    private boolean recordExists(String[] data) {
+    private void updateTable() {
+        tableModel.setRowCount(0); 
         for (String[] record : records) {
-            if (Arrays.equals(record, data)) {
-                return true;
-            }
+            tableModel.addRow(record); 
         }
-        return false;
     }
- 
     private void showFirstRecord() {
         if (totalRecords > 0) {
             if (currentIndex == 0) {
@@ -296,28 +316,34 @@ public class MainFrame extends Frame {
         updateButtonEnabledStates();
     }
     private void searchRecord() {
-        String searchTerm = empNoTextField.getText().trim();
-        if (!searchTerm.isEmpty()) {
-            int foundIndex = -1;
-            for (int i = 0; i < totalRecords; i++) {
-                String[] record = records.get(i);
-                if (record[0].equals(searchTerm)) {
-                    foundIndex = i;
-                    break;
-                }
+        String empNo = empNoTextField.getText().trim();
+        String name = nameTextField.getText().trim();
+        String job = jobTextField.getText().trim();
+        String salary = salaryTextField.getText().trim();
+        String department = departmentChoice.getSelectedItem();
+        if (empNo.isEmpty() && name.isEmpty() && job.isEmpty() && salary.isEmpty() && department.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a search term.");
+            return;
+        }
+        int foundIndex = -1;
+        for (int i = 0; i < totalRecords; i++) {
+            String[] record = records.get(i);
+            if ((!empNo.isEmpty() && record[0].equals(empNo)) ||
+                (!name.isEmpty() && record[1].equals(name)) ||
+                (!job.isEmpty() && record[2].equals(job)) ||
+                (!salary.isEmpty() && record[3].equals(salary)) ||
+                (!department.isEmpty() && record[4].equals(department))) {
+                foundIndex = i;
+                break;
             }
-            if (foundIndex != -1) {
-                currentIndex = foundIndex;
-                displayRecord(currentIndex);
-                JOptionPane.showMessageDialog(this, "Record found.");
-            } else {
-                clearFields();
-                JOptionPane.showMessageDialog(this, "Record not found.");
-            }
+        }
+        if (foundIndex != -1) {
+            currentIndex = foundIndex;
+            displayRecord(currentIndex);
+            JOptionPane.showMessageDialog(this, "Record found.");
         } else {
             clearFields();
-            JOptionPane.showMessageDialog(this, "Please enter a search term.");
-
+            JOptionPane.showMessageDialog(this, "Record not found.");
         }
     }
     private void updateButtonEnabledStates() {

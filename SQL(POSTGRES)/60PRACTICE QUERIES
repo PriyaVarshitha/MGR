@@ -26,5 +26,30 @@ SELECT ename from chinna_emp where ename LIKE 'C%';
 --alphabetical range of ‘C’ to ‘F’.
 select ename,job,dept_no from chinna_emp where ename>='C' and ename<='F' order by ename;
 select ename,job,dept_no from chinna_emp where ename between 'C' and 'F' order by ename; 
+--Q12: Display the list of employee names starting with ‘I’ and ending with ‘R’. 
+select ename from chinna_emp where ename LIKE 'I%R';
+--Q13: Display the employee names which have ‘TII’ or ‘LL’ in them. 
+select ename from chinna_emp where ename LIKE '%TII%' or ename LIKE '%LL%';
+--Q14: display the list of employees who were hired during 1983.
 
+-- To display the list of employees who were hired during the year 1983, 
+--you can use the EXTRACT function to extract the year from the hiredate column and 
+--compare it to the desired year.
+
+select * from chinna_emp where EXTRACT(YEAR from hiredate)=1983;
+
+--Q15: Display the data shown as follows 
+ --Smith has held the position of clerk in department number 20 since 13-JUNE-83. 
+ --Allen has held the position of clerk in department number 20 since 13-JUNE-83. 
+ --Ward has held the position of clerk in department number 20 since 13-JUNE-83.
+ 
+SELECT ename || ' has held the position of ' || job || ' in department number ' || dept_no || ' since ' || TO_CHAR(hiredate, 'DD-MON-YY')
+AS emp_info FROM chinna_emp WHERE job = 'CLERK' AND dept_no = 20 AND hiredate = DATE '1983-06-13';
+
+--Q16:  List all rows from EMP table by converting the NULL values in COMM column to 0 (use NVL command) 
+
+--In this query, the NVL function is used to replace NULL values in the comm column with 0. 
+--The NVL function takes two arguments: the column you want to check for NULL values (comm in this case) 
+--and the value to replace NULL with (0 in this case). The result is aliased as comm using the AS keyword.
+select empno,ename,job,mgr,hiredate,sal, NVL(comm,0) AS comm,dept_no from chinna_emp;
 

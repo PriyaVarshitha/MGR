@@ -1,0 +1,55 @@
+// queries
+
+select * from chinna_emp;
+--q1: List the employee numbers, name, job title and hiredate of the employees in department 10
+--q2: Select the name & salary of all employees who are working as clerks.
+--q3: List the names, job title & salary of employees who were hired on December 17, 1980. 
+select ename,job,sal from chinna_emp where hiredate='1980-12-17';
+--q4:Select the name, salary, and commission of employees whose commission is greater than their salary
+select ename,sal,comm from chinna_emp where comm>=sal;
+--q5:display the names, monthly-salary, daily-salary, and hourly-salary for all the employees.
+select ename,sal as monthly_salary,sal/30 as daily_salary, sal/(30*8) as hourly_salary from chinna_emp;
+--q6: Assume that salary column in the table is monthly salary, and the number of working days are 22 and the number of working hours per day are 8.
+--Rename the columns as MONTHLY, DAILY, AND HOURLY.
+select sal as monthly, sal/22 as daily,sal/(22*8) as hourly from chinna_emp;
+--q7:  List the names and employee numbers of Managers who earn more than 2600/-.
+--Display in alphabetical order of their names.
+select ename,empno from chinna_emp where job='MANAGER'and sal>=2600 order by ename asc;
+--q8: Select the information about Managers and President from the column job in the EMP 
+--table.Order the result by name 
+select ename from chinna_emp where job IN ('MANAGER','PRESIDENT') ORDER BY ename;
+--q9:  List the employee names that don’t end in ‘S’.
+SELECT ename FROM chinna_emp WHERE ename NOT LIKE '%S';
+--Q10:  List the employee names that start with ‘C’
+SELECT ename from chinna_emp where ename LIKE 'C%';
+--Q11 : list the name, job and department numbers of those employees whose names fall in the 
+--alphabetical range of ‘C’ to ‘F’.
+select ename,job,dept_no from chinna_emp where ename>='C' and ename<='F' order by ename;
+select ename,job,dept_no from chinna_emp where ename between 'C' and 'F' order by ename; 
+--Q12: Display the list of employee names starting with ‘I’ and ending with ‘R’. 
+select ename from chinna_emp where ename LIKE 'I%R';
+--Q13: Display the employee names which have ‘TII’ or ‘LL’ in them. 
+select ename from chinna_emp where ename LIKE '%TII%' or ename LIKE '%LL%';
+--Q14: display the list of employees who were hired during 1983.
+
+-- To display the list of employees who were hired during the year 1983, 
+--you can use the EXTRACT function to extract the year from the hiredate column and 
+--compare it to the desired year.
+
+select * from chinna_emp where EXTRACT(YEAR from hiredate)=1983;
+
+--Q15: Display the data shown as follows 
+ --Smith has held the position of clerk in department number 20 since 13-JUNE-83. 
+ --Allen has held the position of clerk in department number 20 since 13-JUNE-83. 
+ --Ward has held the position of clerk in department number 20 since 13-JUNE-83.
+ 
+SELECT ename || ' has held the position of ' || job || ' in department number ' || dept_no || ' since ' || TO_CHAR(hiredate, 'DD-MON-YY')
+AS emp_info FROM chinna_emp WHERE job = 'CLERK' AND dept_no = 20 AND hiredate = DATE '1983-06-13';
+
+--Q16:  List all rows from EMP table by converting the NULL values in COMM column to 0 (use NVL command) 
+
+--In this query, the NVL function is used to replace NULL values in the comm column with 0. 
+--The NVL function takes two arguments: the column you want to check for NULL values (comm in this case) 
+--and the value to replace NULL with (0 in this case). The result is aliased as comm using the AS keyword.
+select empno,ename,job,mgr,hiredate,sal, NVL(comm,0) AS comm,dept_no from chinna_emp;
+

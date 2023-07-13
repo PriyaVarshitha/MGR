@@ -1,0 +1,41 @@
+SELECT * FROM VARSHITHA;
+--List the employee numbers, name, job title and hiredate of the employees in department 10.
+SELECT empno,ename,job,hiredate from VARSHITHA where dept_no=10;
+--Select the name & salary of all employees who are working as clerks.
+SELECT ename,sal from VARSHITHA where job='CLERK';
+--List the names, job title & salary of employees who were hired on December 17, 1980.
+SELECT ename,job,sal from VARSHITHA where hiredate='1980-12-17';
+--Select the name, salary, and commission of employees whose commission is greater than their salary.
+SELECT ename,sal,comm from VARSHITHA where comm>sal;
+--Display the names, monthly-salary, daily-salary, and hourly-salary for all the employees.
+SELECT ename,sal,sal/22,sal/176 from VARSHITHA;
+--Assume that salary column in the table is monthly salary, and the number of working days 
+--are 22 and the number of working hours per day are 8. Rename the columns as MONTHLY, DAILY, AND HOURLY.
+SELECT ename,sal,sal/22 as daily,sal/176 as hourly from VARSHITHA;
+--st the names and employee numbers of Managers who earn more than 2600/-. Display in alphabetical order of their names.
+SELECT ename,empno from VARSHITHA where job='MANAGER' and sal>2600 order by ename;
+--Select the information about Managers and President from the column job in the EMP table.Order the result by name\
+SELECT * from VARSHITHA where job='MANAGER' OR job='PRESIDENT' order by ename;
+--List the employee names that don’t end in ‘S’.
+select ename from VARSHITHA where RIGHT(ename,1)!='S';
+--List the employee names that start with ‘C’.
+select ename from VARSHITHA where LEFT(ename,1)='C';
+--List the name, job and department numbers of those employees whose names fall in the alphabetical range of ‘C’ to ‘F’.
+select ename,job,dept_no from VARSHITHA where LEFT(ename,1)='C' OR LEFT(ename,1)='D' OR LEFT(ename,1)='E' OR LEFT(ename,1)='F';
+select ename,job,dept_no from VARSHITHA where ename BETWEEN 'C' AND 'G';
+--Display the list of employee names starting with ‘I’ and ending with ‘R’.
+SELECT ename from VARSHITHA where left(ename,1)='A' and right(ename,1)='N';
+select ename from VARSHITHA where  ename like ('A%') and ename like('%N');
+select ename from VARSHITHA where  ename like ('I%') and ename like('%R');
+--Display the employee names which have ‘TII’ or ‘LL’ in them.
+SELECT ename from VARSHITHA where ename like ('%ILL%') AND ename like ('%LL%');
+--Display the list of employees who were hired during 1983.
+SELECT * from VARSHITHA where EXTRACT(YEAR FROM hiredate)='1983';
+--Display the data shown as follows 
+--mith has held the position of clerk in department number 20 since 13-JUNE-83. 
+--llen has held the position of clerk in department number 20 since 13-JUNE-83. 
+--ard has held the position of clerk in department number 20 since 13-JUNE-83.
+SELECT ename || 'has held the position of' ||job || 'in department number' || dept_no || 'since' || hiredate from VARSHITHA 
+where job='CLERK' and dept_no=20 and hiredate = '1983-01-12';
+--List all rows from EMP table by converting the NULL values in COMM column to 0 (use NVL command)
+UPDATE VARSHITHA SET[COMM]=0 WHERE SET[COMM] ISNULL;

@@ -1,0 +1,30 @@
+// queries
+
+select * from chinna_emp;
+--q1: List the employee numbers, name, job title and hiredate of the employees in department 10
+--q2: Select the name & salary of all employees who are working as clerks.
+--q3: List the names, job title & salary of employees who were hired on December 17, 1980. 
+select ename,job,sal from chinna_emp where hiredate='1980-12-17';
+--q4:Select the name, salary, and commission of employees whose commission is greater than their salary
+select ename,sal,comm from chinna_emp where comm>=sal;
+--q5:display the names, monthly-salary, daily-salary, and hourly-salary for all the employees.
+select ename,sal as monthly_salary,sal/30 as daily_salary, sal/(30*8) as hourly_salary from chinna_emp;
+--q6: Assume that salary column in the table is monthly salary, and the number of working days are 22 and the number of working hours per day are 8.
+--Rename the columns as MONTHLY, DAILY, AND HOURLY.
+select sal as monthly, sal/22 as daily,sal/(22*8) as hourly from chinna_emp;
+--q7:  List the names and employee numbers of Managers who earn more than 2600/-.
+--Display in alphabetical order of their names.
+select ename,empno from chinna_emp where job='MANAGER'and sal>=2600 order by ename asc;
+--q8: Select the information about Managers and President from the column job in the EMP 
+--table.Order the result by name 
+select ename from chinna_emp where job IN ('MANAGER','PRESIDENT') ORDER BY ename;
+--q9:  List the employee names that don’t end in ‘S’.
+SELECT ename FROM chinna_emp WHERE ename NOT LIKE '%S';
+--Q10:  List the employee names that start with ‘C’
+SELECT ename from chinna_emp where ename LIKE 'C%';
+--Q11 : list the name, job and department numbers of those employees whose names fall in the 
+--alphabetical range of ‘C’ to ‘F’.
+select ename,job,dept_no from chinna_emp where ename>='C' and ename<='F' order by ename;
+select ename,job,dept_no from chinna_emp where ename between 'C' and 'F' order by ename; 
+
+
